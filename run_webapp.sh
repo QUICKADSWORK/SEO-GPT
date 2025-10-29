@@ -10,8 +10,13 @@ if ! python3 -c "import flask" 2>/dev/null; then
     pip3 install flask
 fi
 
-# Set API key
-export SEMRUSH_API_KEY="56b6f4dce1mshc3398ebe2b7bdf7p1a8c18jsn91e4f7fa09ae"
+# Set API key (if not already set)
+if [ -z "$SEMRUSH_API_KEY" ]; then
+    export SEMRUSH_API_KEY="56b6f4dce1mshc3398ebe2b7bdf7p1a8c18jsn91e4f7fa09ae"
+    echo "✅ Using default API key"
+else
+    echo "✅ Using API key from environment"
+fi
 
 # Start the app
 echo "✅ App will be available at: http://localhost:5000"

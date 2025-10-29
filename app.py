@@ -13,8 +13,8 @@ from datetime import datetime
 
 app = Flask(__name__)
 
-# Your RapidAPI key
-RAPIDAPI_KEY = "56b6f4dce1mshc3398ebe2b7bdf7p1a8c18jsn91e4f7fa09ae"
+# Get RapidAPI key from environment variable or use default
+RAPIDAPI_KEY = os.getenv('SEMRUSH_API_KEY') or os.getenv('RAPIDAPI_KEY') or "56b6f4dce1mshc3398ebe2b7bdf7p1a8c18jsn91e4f7fa09ae"
 
 @app.route('/')
 def index():
