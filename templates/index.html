@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Domain Metrics Analyzer - Get DR & US Traffic</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎯 Domain Metrics Analyzer</h1>
+            <p class="subtitle">Get Domain Rating & US Traffic for any website</p>
+        </header>
+
+        <div class="main-content">
+            <div class="input-section">
+                <h2>Enter Domains</h2>
+                <p class="help-text">Enter up to 20 domains (one per line or comma-separated)</p>
+                
+                <textarea 
+                    id="domainsInput" 
+                    placeholder="Example:&#10;stripe.com&#10;shopify.com&#10;salesforce.com"
+                    rows="10"
+                ></textarea>
+
+                <div class="examples">
+                    <button class="example-btn" onclick="loadExample()">📝 Load Example</button>
+                    <button class="clear-btn" onclick="clearInput()">🗑️ Clear</button>
+                </div>
+
+                <button id="analyzeBtn" class="analyze-btn" onclick="analyzeDomains()">
+                    <span id="btnText">🚀 Analyze Domains</span>
+                    <span id="btnLoader" class="loader" style="display: none;"></span>
+                </button>
+            </div>
+
+            <div class="results-section" id="resultsSection" style="display: none;">
+                <div class="results-header">
+                    <h2>Results</h2>
+                    <button class="export-btn" onclick="exportResults()">📥 Export CSV</button>
+                </div>
+                
+                <div id="resultsStats" class="stats"></div>
+                
+                <div class="table-container">
+                    <table id="resultsTable">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Domain</th>
+                                <th>Domain Rating</th>
+                                <th>US Traffic</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resultsBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Powered by SEMrush API • Made with ❤️</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
+

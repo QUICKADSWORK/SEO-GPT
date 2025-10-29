@@ -1,0 +1,98 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Flask
+instance/
+.webassets-cache
+
+# Environment variables
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test files
+test_*.py
+*_test.csv
+*_results.csv
+quickads*.csv
+tigerloans*.csv
+zenskar*.csv
+final_test*.csv
+both_results.csv
+example_domains.csv
+
+# Temporary files
+*.tmp
+*.log
+show_*.py
+test_*.sh
+
+# Auth
+.auth/
+*.pem
+*.key
+
+# Transcripts and data files
+transcript-*.txt
+transcripts_*.csv
+*.png
+*.jpg
+
+# Node modules (if any)
+node_modules/
+
+# Specific test/example files to ignore
+batch_*.py
+bulk_*.py
+cli_email_extractor.py
+extract_emails.py
+linkedin_*.py
+avoma_*.sh
+fetch_*.sh
+run_bulk_fetch.sh
+manual-scraper.js
+setup.js
+config.js
+index.js
+test-email-extraction.js
+single_command.txt
+avoma_*.txt
+emails.csv
+emails.json
+linkedin_emails.csv
+linkedin_emails.json
+batch_linkedin_emails*.csv
+batch_linkedin_emails*.json
+meeting_ids*.txt

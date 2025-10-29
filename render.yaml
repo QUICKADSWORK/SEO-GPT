@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: domain-metrics-analyzer
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn app:app"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.9.0
+      - key: SEMRUSH_API_KEY
+        value: 56b6f4dce1mshc3398ebe2b7bdf7p1a8c18jsn91e4f7fa09ae
+
