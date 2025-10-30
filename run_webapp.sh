@@ -19,7 +19,7 @@ else
 fi
 
 # Start the app
-echo "✅ App will be available at: http://localhost:5000"
+echo "✅ App will be available at: http://localhost:8000"
 echo "Press Ctrl+C to stop the server"
 echo ""
 
