@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  @apply bg-slate-50 text-slate-900;
+}
+
+.gradient-bg {
+  background: radial-gradient(120% 120% at 50% 0%, rgba(79, 70, 229, 0.15) 0%, rgba(30, 64, 175, 0) 60%);
+}
+
+.glass {
+  @apply bg-white/70 backdrop-blur-xl border border-white/40 shadow-subtle;
+}
+
+.prose {
+  @apply max-w-none text-slate-700;
+}
+
+.prose h2 {
+  @apply text-slate-800;
+}
+
+.prose a {
+  @apply text-brand-600 underline decoration-brand-200 decoration-2 underline-offset-4;
+}

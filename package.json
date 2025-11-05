@@ -1,0 +1,42 @@
+{
+  "name": "multi-blog-generator",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.11.2",
+    "axios": "^1.7.2",
+    "clsx": "^2.1.0",
+    "docx": "^8.5.0",
+    "dompurify": "^3.1.6",
+    "react-hook-form": "^7.51.5",
+    "@tailwindcss/typography": "^0.5.11",
+    "next": "14.2.4",
+    "node-html-parser": "^6.1.11",
+    "openai": "^4.47.0",
+    "papaparse": "^5.4.1",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "zustand": "^4.5.2",
+    "zod": "^3.23.5"
+  },
+  "devDependencies": {
+    "@types/dompurify": "^3.0.5",
+    "@types/node": "^20.12.7",
+    "@types/papaparse": "^5.3.11",
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.0",
+    "autoprefixer": "^10.4.18",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^14.2.4",
+    "postcss": "^8.4.35",
+    "tailwindcss": "^3.4.3",
+    "typescript": "^5.4.5",
+    "@hookform/resolvers": "^3.3.4"
+  }
+}
