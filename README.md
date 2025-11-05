@@ -1,296 +1,169 @@
-# 🎯 Domain Metrics Analyzer
+# ⚡️ AI Multi-Blog Generator
 
-**Beautiful web app to check Domain Rating & US Traffic for any website!**
+Generate SEO-ready blog campaigns in batches with AI-written content, DALL·E 3 imagery, backlinks, and Word document exports — all from a single dashboard.
 
-[![Python](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
-[![Flask](https://img.shields.io/badge/flask-3.0-green.svg)](https://flask.palletsprojects.com/)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Status](https://img.shields.io/badge/status-ready-success.svg)]()
-
-![Domain Metrics Analyzer](https://img.shields.io/badge/SEMrush-Powered-orange)
+![Next.js](https://img.shields.io/badge/Next.js-14-black)
+![React](https://img.shields.io/badge/React-18-61dafb)
+![TailwindCSS](https://img.shields.io/badge/Tailwind-3-38bdf8)
+![License](https://img.shields.io/badge/license-MIT-blue)
 
 ---
 
-## ✨ Features
+## ✨ Feature Highlights
 
-- 🎨 **Beautiful Modern UI** - Purple gradient design, fully responsive
-- ⚡ **Fast Analysis** - Check up to 20 domains in seconds
-- 📊 **Live Results** - Real-time table with color-coded DR badges
-- 💾 **CSV Export** - Download results with one click
-- 📱 **Mobile Friendly** - Works perfectly on all devices
-- 🔒 **Accurate Data** - SEMrush API with adjusted DR formula
+- **Batch blog generation** — create 1-10 blogs simultaneously or import a CSV for bulk briefs.
+- **Gemini-powered copy** — structured HTML output with meta tags, FAQ, backlinks, and keyword linking rules.
+- **DALL·E 3 image pairs** — hero + inline visuals generated in parallel for every blog.
+- **Live progress tracking** — per-blog job state, retries, and error surfacing.
+- **Rich preview** — sanitized HTML preview with prompts, metadata, and backlinks.
+- **One-click Word export** — combine every blog into a `.docx` file with embedded imagery, TOC, and pagination.
+- **Responsive dashboard** — modern Tailwind design with glassmorphism and mobile support.
+
+---
+
+## 🏗️ Architecture
+
+| Layer      | Technology | Notes |
+|------------|------------|-------|
+| Frontend   | Next.js 14 (App Router), React 18, Tailwind CSS, Zustand | SPA-like client components with server-rendered shell |
+| Backend    | Next.js API Routes | Node runtime with rate limiting + AI orchestration |
+| AI Content | Google Gemini 1.5 Pro | Structured JSON prompts for consistent HTML |
+| AI Images  | OpenAI DALL·E 3 (`gpt-image-1`) | Generates featured + body images in parallel |
+| Export     | `docx` + `node-html-parser` | Converts sanitized HTML + embeds images |
 
 ---
 
 ## 🚀 Quick Start
 
-### Run Locally (30 seconds)
+### 1. Prerequisites
+
+- Node.js 18.17+ (or the version provided by Next.js 14)
+- npm 9+
+- API keys: [Google Gemini](https://aistudio.google.com/) and [OpenAI](https://platform.openai.com/)
+
+### 2. Install & Run
 
 ```bash
-# Clone the repository
-git clone https://github.com/YOUR_USERNAME/domain-metrics-analyzer.git
-cd domain-metrics-analyzer
+git clone https://github.com/YOUR_ORG/multi-blog-generator.git
+cd multi-blog-generator
 
-# Install dependencies
-pip3 install -r requirements.txt
+cp .env.local.example .env.local
+# Fill in GEMINI_API_KEY and OPENAI_API_KEY
 
-# Set your RapidAPI key
-export SEMRUSH_API_KEY="your-rapidapi-key-here"
-
-# Run the app
-python3 app.py
+npm install
+npm run dev
 ```
 
-Open **http://localhost:5000** in your browser! 🎉
+Open http://localhost:3000 to access the dashboard.
 
 ---
 
-## 📸 Screenshots
+## 🔐 Environment Variables
 
-### Main Interface
-Beautiful purple gradient UI with easy domain input:
+| Variable | Description |
+|----------|-------------|
+| `GEMINI_API_KEY` | Server-side key for Google Generative AI (content generation) |
+| `OPENAI_API_KEY` | Server-side key for OpenAI image generation |
+| `OPENAI_IMAGE_MODEL` *(optional)* | Override image model (defaults to `gpt-image-1`) |
+| `GEMINI_MODEL` *(optional)* | Override content model (defaults to `gemini-1.5-pro-latest`) |
+| `RATE_LIMIT_REQUESTS` *(optional)* | Requests per window per IP (default: 8) |
+| `RATE_LIMIT_WINDOW_MS` *(optional)* | Window size in ms (default: 60000) |
+| `NEXT_PUBLIC_MAX_PARALLEL` *(optional)* | Client-side concurrency limit for blog jobs (default: 3) |
+
+When API keys are missing the app continues to work in demo mode: Gemini calls will fail, while the image service returns branded SVG placeholders.
+
+---
+
+## 🧭 Using the Dashboard
+
+1. **Configure the brief**
+   - Primary keyword (required) and optional secondary keywords
+   - Tone, approximate word count, outline, and backlink URL
+   - Queue multiple copies (1–10) or upload a CSV with per-blog parameters
+
+2. **Launch generation**
+   - Each blog spins up its own concurrent job
+   - Live status chips show `Queued → Generating → Ready`
+   - Failures display error messages with an inline retry button
+
+3. **Review & refine**
+   - Preview sanitized HTML alongside featured/body image prompts
+   - Copy raw HTML, remove entries, or retry specific blogs
+
+4. **Export to Word**
+   - Click **“Export all blogs to Word”** for a `.docx` with:
+     - Table of contents
+     - Per-blog sections (H1/H2 hierarchy)
+     - Embedded AI imagery + prompts
+     - Automatic page breaks and metadata
+
+### CSV Headers
 
 ```
-┌─────────────────────────────────────────┐
-│   🎯 Domain Metrics Analyzer            │
-│   Get Domain Rating & US Traffic        │
-├─────────────────────────────────────────┤
-│   Enter Domains                          │
-│   ┌────────────────────────────────────┐│
-│   │ stripe.com                         ││
-│   │ shopify.com                        ││
-│   │ quickads.ai                        ││
-│   └────────────────────────────────────┘│
-│   [🚀 Analyze Domains]                  │
-└─────────────────────────────────────────┘
+primaryKeyword,secondaryKeywords,blogTitle,outline,wordCount,tone,backlinkUrl
 ```
 
-### Results Table
-Color-coded DR badges and formatted traffic numbers:
-
-| Domain | Domain Rating | US Traffic | Status |
-|--------|---------------|------------|--------|
-| quickads.ai | 🟢 56.1 | 26,800 | ✓ Success |
-| creatify.ai | 🟢 59.8 | 53,580 | ✓ Success |
-| predis.ai | 🟢 72.1 | 129,189 | ✓ Success |
+`wordCount` must be 1000, 1500, or 2000; `tone` must be conversational | professional | technical | casual.
 
 ---
 
-## 🎯 Use Cases
+## 🛡️ Rate Limiting & Error Handling
 
-- **SEO Analysis** - Check domain authority quickly
-- **Competitor Research** - Compare multiple domains
-- **Client Reports** - Export beautiful CSV reports
-- **Link Building** - Evaluate potential partners
-- **Market Research** - Analyze traffic patterns
+- In-memory token bucket per IP (defaults: 8 requests / 60s)
+- Descriptive error messages bubble to the UI with retry affordances
+- Frontend concurrency can be tuned via `NEXT_PUBLIC_MAX_PARALLEL`
 
 ---
 
-## 🛠️ How It Works
-
-1. **Paste Domains** - Enter up to 20 domains (one per line or comma-separated)
-2. **Click Analyze** - SEMrush API fetches the data
-3. **View Results** - Beautiful table with DR & traffic metrics
-4. **Export CSV** - Download results for reports
-
-### Technology Stack
-
-- **Backend:** Python 3.9 + Flask
-- **Frontend:** Vanilla JavaScript (no frameworks!)
-- **Styling:** Custom CSS with gradients
-- **API:** SEMrush via RapidAPI
-- **Server:** Gunicorn (production)
-
----
-
-## 📊 Metrics Explained
-
-### Domain Rating (DR)
-- **Scale:** 0-100
-- **Meaning:** Domain authority based on backlinks & keywords
-- **Formula:** Adjusted SEMrush score (raw score - 19)
-- **Color Coding:**
-  - 🟢 60+ = High Authority
-  - 🟡 30-59 = Medium Authority
-  - 🔴 0-29 = Low Authority
-
-### US Traffic
-- **Metric:** Estimated monthly visits from USA
-- **Source:** SEMrush organic search data
-- **Includes:** Direct, referral, social, and organic traffic
-
----
-
-## 🌐 Deploy to Production
-
-### Option 1: Render.com (Free!)
-
-1. Fork this repository
-2. Sign up at [render.com](https://render.com)
-3. Create new Web Service from GitHub
-4. Set environment variable: `SEMRUSH_API_KEY`
-5. Deploy! (Auto-deploys from `render.yaml`)
-
-**Live in 2 minutes!** ✨
-
-### Option 2: Heroku
+## 🧪 Development Scripts
 
 ```bash
-heroku create your-app-name
-heroku config:set SEMRUSH_API_KEY=your-key
-git push heroku main
-heroku open
+npm run dev    # Start the Next.js dev server
+npm run lint   # Run ESLint with Next.js config
+npm run build  # Production build (auto-enables TypeScript checks)
+npm run start  # Start production server (after build)
 ```
 
-### Option 3: Your Own Server
-
-```bash
-# Install dependencies
-pip3 install -r requirements.txt
-
-# Run with Gunicorn
-gunicorn --bind 0.0.0.0:80 app:app
-```
-
-**See [WEBAPP_DEPLOYMENT.md](WEBAPP_DEPLOYMENT.md) for detailed guides**
+Tailwind utilities live in `app/globals.css`. State management uses `store/blogStore.ts` (Zustand).
 
 ---
 
-## 🔑 Getting API Key
+## ☁️ Deployment
 
-1. Sign up at [RapidAPI](https://rapidapi.com/)
-2. Subscribe to [SEMrush Website Traffic Checker](https://rapidapi.com/semrush/api/semrush-website-traffic-checker)
-3. Copy your API key
-4. Set as environment variable:
-   ```bash
-   export SEMRUSH_API_KEY="your-key-here"
-   ```
+- **Vercel** — zero-config deployment (select Next.js app, set env vars)
+- **Render / Railway / Fly.io** — use `npm run build` ➜ `npm run start`
+- Ensure `GEMINI_API_KEY` and `OPENAI_API_KEY` are set in production environment
 
-**Note:** Free tier available on RapidAPI!
+### Example Render Build Command
 
----
-
-## 📖 Documentation
-
-- **[QUICKSTART.md](QUICKSTART.md)** - Get started in 30 seconds
-- **[WEBAPP_README.md](WEBAPP_README.md)** - Complete feature guide
-- **[WEBAPP_DEPLOYMENT.md](WEBAPP_DEPLOYMENT.md)** - Deploy anywhere
-
----
-
-## 💻 CLI Version
-
-Prefer command-line? Use the Python script directly:
-
-```bash
-python3 domain_metrics_agent.py domains.csv --provider semrush -o results.csv
 ```
-
-**Input CSV:**
-```csv
-domain
-stripe.com
-shopify.com
-```
-
-**Output CSV:**
-```csv
-domain,domain_rating,us_traffic,provider
-stripe.com,81.0,4052024,semrush
-shopify.com,81.0,12095133,semrush
+Build Command: npm install && npm run build
+Start Command: npm run start
 ```
 
 ---
 
-## 🎨 Customization
+## 📝 Notes & Limitations
 
-### Change Colors
-
-Edit `static/css/style.css`:
-
-```css
-/* Primary gradient */
-background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-
-/* DR badge colors */
-.dr-high { background: #10b981; }   /* Green: 60+ */
-.dr-medium { background: #f59e0b; } /* Orange: 30-59 */
-.dr-low { background: #ef4444; }    /* Red: 0-29 */
-```
-
-### Add Features
-
-- **Frontend:** Edit `templates/index.html` and `static/js/script.js`
-- **Backend:** Edit `app.py` and `domain_metrics_agent.py`
+- The Google Gemini and OpenAI calls are not mocked; network access and billing apply.
+- HTML post-processing enforces:
+  - Two keyword hyperlinks after the intro paragraph
+  - At least two backlinks to the provided URL
+- `docx` export supports common elements (`h1-h3`, `p`, `ul/ol`, `aside`, `img`, `a`, emphasis). Complex HTML may be flattened.
+- `npm audit` currently reports a critical vulnerability in a transient dependency. Run `npm audit fix --force` if your policies require a clean report.
 
 ---
 
-## 🔒 Security
+## 📄 License
 
-### Before Public Deployment
-
-1. **Move API key to environment variable** (already configured in `app.py`)
-2. **Enable HTTPS** (automatic on Render/Heroku)
-3. **Add rate limiting** (optional):
-   ```bash
-   pip install flask-limiter
-   ```
+MIT — see [LICENSE](LICENSE) for details.
 
 ---
 
-## 🤝 Contributing
+## 🙋 Support
 
-Contributions welcome! Here's how:
+- Issues & feature requests: open a GitHub issue
+- Questions: start a discussion or reach out to the maintainers
 
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/amazing-feature`
-3. Commit changes: `git commit -m 'Add amazing feature'`
-4. Push to branch: `git push origin feature/amazing-feature`
-5. Open a Pull Request
-
----
-
-## 📝 License
-
-MIT License - feel free to use and modify!
-
----
-
-## 🙏 Acknowledgments
-
-- **SEMrush API** for domain metrics data
-- **Flask** for the amazing web framework
-- **RapidAPI** for easy API access
-
----
-
-## 📞 Support
-
-- 📖 **Documentation:** See files in repository
-- 🐛 **Issues:** [GitHub Issues](https://github.com/YOUR_USERNAME/domain-metrics-analyzer/issues)
-- 💬 **Discussions:** [GitHub Discussions](https://github.com/YOUR_USERNAME/domain-metrics-analyzer/discussions)
-
----
-
-## 🚀 Roadmap
-
-Future enhancements:
-
-- [ ] User authentication
-- [ ] Save analysis history
-- [ ] Scheduled monitoring
-- [ ] Email reports
-- [ ] Trend charts
-- [ ] Competitor comparison
-- [ ] More metrics (backlinks, keywords, etc.)
-
----
-
-## ⭐ Star This Repo!
-
-If you find this useful, please give it a star! It helps others discover the project.
-
----
-
-**Built with ❤️ using Flask & SEMrush API**
+Happy shipping! ⚙️✍️🖼️
 

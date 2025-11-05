@@ -1,342 +1,195 @@
-# Domain Metrics Web App - Deployment Guide 🚀
+# AI Multi-Blog Generator – Deployment Guide 🚀
 
-Beautiful web interface for checking Domain Rating and US Traffic for any website.
-
-## 🎯 Features
-
-✅ **Beautiful Modern UI** - Gradient design, responsive layout
-✅ **Batch Analysis** - Check up to 20 domains at once
-✅ **Real-time Results** - Live updates as domains are analyzed
-✅ **Export to CSV** - Download results with one click
-✅ **Mobile Friendly** - Works on all devices
-✅ **SEMrush Powered** - Accurate DR and traffic data
+This guide walks through deploying the Next.js + AI workload to popular platforms. The app ships a Node/React frontend, server-side API routes, and integration with Google Gemini + OpenAI DALL·E 3.
 
 ---
 
-## 🏃 Quick Start (Local)
+## ✅ Pre-Deployment Checklist
 
-### 1. Install Dependencies
-
-```bash
-pip3 install flask requests
-```
-
-### 2. Run the App
-
-```bash
-./run_webapp.sh
-```
-
-Or manually:
-
-```bash
-python3 app.py
-```
-
-### 3. Open in Browser
-
-Visit: **http://localhost:5000**
+- [ ] Acquire API keys for **Google Gemini** and **OpenAI**
+- [ ] Populate `.env.local` (or provider-specific secret store)
+- [ ] Verify local build `npm run build`
+- [ ] Confirm linting passes `npm run lint`
 
 ---
 
-## 🌐 Deploy to Production
+## 🌐 Environment Variables
 
-### Option 1: Deploy to Render (Free, Recommended)
+| Key | Required | Description |
+|-----|----------|-------------|
+| `GEMINI_API_KEY` | ✅ | Used on the server to call Gemini for blog generation |
+| `OPENAI_API_KEY` | ✅ | Used on the server to call DALL·E 3 / `gpt-image-1` |
+| `OPENAI_IMAGE_MODEL` | ⛔ optional | Override image model (default `gpt-image-1`) |
+| `GEMINI_MODEL` | ⛔ optional | Override content model (default `gemini-1.5-pro-latest`) |
+| `RATE_LIMIT_REQUESTS` | ⛔ optional | Requests per minute per IP (default 8) |
+| `RATE_LIMIT_WINDOW_MS` | ⛔ optional | Rate-limit window in milliseconds (default 60000) |
+| `NEXT_PUBLIC_MAX_PARALLEL` | ⛔ optional | Client-side concurrent jobs (default 3) |
 
-1. **Create account** at https://render.com
+> Store API keys in the hosting platform’s secret manager. Never commit them.
 
-2. **Create `render.yaml`** (already included):
+---
+
+## 🚀 Option 1 — Vercel (Recommended)
+
+1. **Import Project**
+   - Go to [vercel.com/import](https://vercel.com/import) and connect your GitHub/GitLab repo.
+
+2. **Configure Build**
+   - Framework preset: **Next.js**
+   - Build command: `npm run build`
+   - Output directory: `.next`
+
+3. **Set Environment Variables**
+   - Add `GEMINI_API_KEY`, `OPENAI_API_KEY`, plus any optional overrides.
+
+4. **Deploy**
+   - Press deploy. Vercel handles automatic builds on subsequent pushes.
+
+5. **Image Domains (Optional)**
+   - DALL·E returns base64 strings, so no extra configuration is required. If you change to remote URLs, configure `next.config.mjs` `images.remotePatterns` accordingly.
+
+---
+
+## ☁️ Option 2 — Render.com
+
+Render configuration file `render.yaml` is included:
+
 ```yaml
 services:
   - type: web
-    name: domain-metrics
-    env: python
-    buildCommand: "pip install -r requirements.txt"
-    startCommand: "gunicorn app:app"
+    name: ai-multi-blog-generator
+    env: node
+    plan: free
+    buildCommand: "npm install && npm run build"
+    startCommand: "npm run start"
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: NEXT_PUBLIC_MAX_PARALLEL
+        value: "3"
 ```
 
-3. **Push to GitHub**:
-```bash
-git init
-git add .
-git commit -m "Domain Metrics Web App"
-git remote add origin YOUR_GITHUB_REPO
-git push -u origin main
-```
+Steps:
 
-4. **Connect Render to GitHub** and deploy!
+1. Push the repository to GitHub/GitLab.
+2. In Render, choose **New → Web Service** and import the repo.
+3. Render reads `render.yaml`, provisions the service, and prompts for environment variables.
+4. Click deploy. Render runs `npm run build`, then `npm run start` on a Node runtime.
 
-**Live in 2 minutes!** ✨
+> Update `plan` if you need more resources than the free tier.
 
 ---
 
-### Option 2: Deploy to Heroku
+## ☁️ Option 3 — Railway
 
-1. **Install Heroku CLI**:
-```bash
-brew install heroku/brew/heroku
-```
-
-2. **Create Heroku app**:
-```bash
-heroku create domain-metrics-app
-```
-
-3. **Create Procfile**:
-```bash
-echo "web: gunicorn app:app" > Procfile
-```
-
-4. **Deploy**:
-```bash
-git init
-heroku git:remote -a domain-metrics-app
-git add .
-git commit -m "Deploy Domain Metrics"
-git push heroku main
-```
-
-5. **Open app**:
-```bash
-heroku open
-```
+1. Create a new Railway project and select “Deploy from GitHub”.
+2. Set the following in **Variables**:
+   - `GEMINI_API_KEY`
+   - `OPENAI_API_KEY`
+   - Optionally `NEXT_PUBLIC_MAX_PARALLEL`
+3. In the **Service Settings**, override build/start commands if needed:
+   - Build: `npm install && npm run build`
+   - Start: `npm run start`
+4. Deploy. Railway provisions a Node environment automatically.
 
 ---
 
-### Option 3: Deploy to DigitalOcean App Platform
+## 🧰 Option 4 — Docker + Any Cloud
 
-1. **Create account** at https://digitalocean.com
+Create a `Dockerfile` (not included by default) similar to:
 
-2. **Create new App** from GitHub repo
+```dockerfile
+FROM node:20-alpine AS deps
+WORKDIR /app
+COPY package.json package-lock.json* ./
+RUN npm install
 
-3. **Configure**:
-   - Runtime: Python
-   - Build Command: `pip install -r requirements.txt`
-   - Run Command: `gunicorn app:app`
+FROM node:20-alpine AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+RUN npm run build
 
-4. **Deploy!**
+FROM node:20-alpine AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
+COPY package.json package-lock.json* ./
+RUN npm install --omit=dev
+EXPOSE 3000
+CMD ["npm", "run", "start"]
+```
+
+This image can be deployed to AWS ECS/Fargate, Google Cloud Run, Azure Container Apps, Fly.io, etc. Remember to inject environment variables via each platform’s secrets system.
 
 ---
 
-### Option 4: Deploy to AWS (EC2)
+## 💻 Option 5 — Self-Hosted (PM2 or systemd)
 
-1. **Launch EC2 instance** (Ubuntu)
+1. Provision a Node 18+ server.
+2. Copy the repository to the server.
+3. Run:
 
-2. **SSH into server**:
-```bash
-ssh -i your-key.pem ubuntu@your-server-ip
-```
+   ```bash
+   npm install
+   npm run build
+   npm install -g pm2
+   pm2 start npm --name blog-generator -- run start
+   pm2 save
+   ```
 
-3. **Install dependencies**:
-```bash
-sudo apt update
-sudo apt install python3-pip nginx
-pip3 install flask requests gunicorn
-```
+4. Configure a reverse proxy (NGINX/Caddy) to forward traffic to `localhost:3000`.
+5. Place secrets in `/etc/environment` or a systemd unit file:
 
-4. **Upload files**:
-```bash
-scp -r * ubuntu@your-server-ip:/home/ubuntu/domain-metrics/
-```
-
-5. **Run with Gunicorn**:
-```bash
-cd /home/ubuntu/domain-metrics
-gunicorn --bind 0.0.0.0:5000 app:app
-```
-
-6. **Configure Nginx** (optional):
-```nginx
-server {
-    listen 80;
-    server_name your-domain.com;
-    
-    location / {
-        proxy_pass http://127.0.0.1:5000;
-        proxy_set_header Host $host;
-    }
-}
-```
+   ```ini
+   [Service]
+   Environment="GEMINI_API_KEY=..."
+   Environment="OPENAI_API_KEY=..."
+   ```
 
 ---
 
-### Option 5: Deploy to Vercel (Serverless)
+## 🔐 Security & Compliance
 
-1. **Install Vercel CLI**:
-```bash
-npm i -g vercel
-```
-
-2. **Create `vercel.json`**:
-```json
-{
-  "builds": [{
-    "src": "app.py",
-    "use": "@vercel/python"
-  }],
-  "routes": [{
-    "src": "/(.*)",
-    "dest": "app.py"
-  }]
-}
-```
-
-3. **Deploy**:
-```bash
-vercel
-```
+- Rotate API keys regularly.
+- Enforce HTTPS in production via your hosting provider.
+- Monitor AI usage quotas and costs.
+- Consider adding authentication or request quotas before exposing to end users.
+- Update dependencies periodically (`npm audit fix --force` may be required to clear transient vulnerabilities).
 
 ---
 
-## 🔧 Environment Variables
+## 🧪 Post-Deployment Smoke Test
 
-Set these in your hosting platform:
-
-```bash
-SEMRUSH_API_KEY=56b6f4dce1mshc3398ebe2b7bdf7p1a8c18jsn91e4f7fa09ae
-```
-
----
-
-## 📁 File Structure
-
-```
-domain-metrics-app/
-├── app.py                      # Flask backend
-├── domain_metrics_agent.py     # Core logic
-├── requirements.txt            # Python dependencies
-├── templates/
-│   └── index.html             # Frontend HTML
-├── static/
-│   ├── css/
-│   │   └── style.css          # Styles
-│   └── js/
-│       └── script.js          # Frontend logic
-└── run_webapp.sh              # Local run script
-```
+1. Load the dashboard in production.
+2. Generate a single blog with a small word count to verify Gemini + DALL·E connectivity.
+3. Confirm progress tracking transitions `Queued → Generating → Ready`.
+4. Export to Word and ensure the `.docx` contains text, meta, and both images.
 
 ---
 
-## 🎨 UI Features
+## 🛠 Troubleshooting
 
-### Input Section
-- 📝 Paste domains (one per line or comma-separated)
-- 📋 Load example domains
-- 🗑️ Clear all
-- 🚀 Analyze button with loading state
-
-### Results Section
-- 📊 Summary stats (avg DR, total traffic)
-- 📋 Beautiful table with color-coded DR badges
-- 💾 Export to CSV
-- 📱 Mobile responsive
-
-### DR Color Coding
-- 🟢 Green: DR 60+ (High authority)
-- 🟡 Orange: DR 30-59 (Medium authority)
-- 🔴 Red: DR 0-29 (Low authority)
+| Issue | Fix |
+|-------|-----|
+| Build fails (`Module not found: docx` etc.) | Ensure `npm install` ran successfully and lockfile is present |
+| 500 errors from `/api/generate` | Check rate limits, verify API keys, inspect server logs |
+| DALL·E image failures | Confirm the OpenAI key has image API access; fallback SVGs appear if key is missing |
+| Gemini quota exceeded | Reduce batch size, add retries, or upgrade quota |
+| Exports missing images | Verify image data URI size is within docx limits (default transformation uses 512×320) |
 
 ---
 
-## 🔒 Security Notes
+## 📦 Rolling Updates
 
-⚠️ **Before deploying publicly**:
-
-1. **Remove hardcoded API key** from `app.py`
-2. **Use environment variables**:
-```python
-RAPIDAPI_KEY = os.getenv('RAPIDAPI_KEY')
-```
-
-3. **Add rate limiting**:
-```bash
-pip install flask-limiter
-```
-
-4. **Add authentication** (optional):
-```bash
-pip install flask-login
-```
+1. Merge changes into your main branch.
+2. Hosting platform rebuilds automatically (or trigger manually).
+3. Monitor logs for AI API errors after rollout.
 
 ---
 
-## 💰 Hosting Cost Comparison
-
-| Platform | Free Tier | Paid | Best For |
-|----------|-----------|------|----------|
-| **Render** | ✅ Yes | $7/mo | Easy deployment |
-| **Heroku** | ❌ No | $5/mo | Quick setup |
-| **Vercel** | ✅ Yes | $20/mo | Serverless |
-| **DigitalOcean** | ❌ No | $6/mo | Full control |
-| **AWS EC2** | ✅ 12mo free | $5-10/mo | Scalability |
-
-**Recommendation**: Start with **Render.com** (free tier) for testing!
-
----
-
-## 🚀 Production Checklist
-
-Before going live:
-
-- [ ] Remove hardcoded API keys
-- [ ] Set environment variables
-- [ ] Add rate limiting (max requests/minute)
-- [ ] Enable HTTPS
-- [ ] Add Google Analytics (optional)
-- [ ] Test on mobile devices
-- [ ] Set up error logging
-- [ ] Add domain limit (20 max)
-- [ ] Configure CORS if needed
-
----
-
-## 🐛 Troubleshooting
-
-### App won't start
-```bash
-# Check if Flask is installed
-pip3 install flask
-
-# Check if port 5000 is available
-lsof -i :5000
-```
-
-### API errors
-```bash
-# Verify API key is set
-echo $SEMRUSH_API_KEY
-
-# Check rate limits on RapidAPI dashboard
-```
-
-### Slow responses
-```bash
-# Increase worker processes (Gunicorn)
-gunicorn --workers 4 app:app
-```
-
----
-
-## 📈 Next Steps
-
-Want to enhance the app?
-
-1. **Add authentication** - Login system
-2. **Save history** - Database integration
-3. **Scheduled checks** - Monitor domains daily
-4. **Email reports** - Send CSV via email
-5. **API endpoint** - Expose as REST API
-6. **Competitor analysis** - Compare multiple domains
-7. **Trend charts** - Track DR/traffic over time
-
----
-
-## 🎉 You're All Set!
-
-Your beautiful domain metrics analyzer is ready to deploy! 
-
-**Local**: `./run_webapp.sh`
-**Production**: Choose your platform above
-
-Questions? Check the main README or create an issue!
+Happy launching! 🌍✍️🖼️
 

@@ -1,27 +1,19 @@
 #!/bin/bash
-# Start the Domain Metrics Web App
+# Start the AI Multi-Blog Generator (Next.js) in development mode
 
-echo "🚀 Starting Domain Metrics Web App..."
+set -euo pipefail
+
+echo "🚀 Starting AI Multi-Blog Generator..."
 echo ""
 
-# Install dependencies if needed
-if ! python3 -c "import flask" 2>/dev/null; then
-    echo "📦 Installing Flask..."
-    pip3 install flask
+if [ ! -d "node_modules" ]; then
+  echo "📦 Installing npm dependencies"
+  npm install
 fi
 
-# Set API key (if not already set)
-if [ -z "$SEMRUSH_API_KEY" ]; then
-    export SEMRUSH_API_KEY="56b6f4dce1mshc3398ebe2b7bdf7p1a8c18jsn91e4f7fa09ae"
-    echo "✅ Using default API key"
-else
-    echo "✅ Using API key from environment"
-fi
-
-# Start the app
-echo "✅ App will be available at: http://localhost:8000"
+echo "⚙️  Launching Next.js dev server on http://localhost:3000"
 echo "Press Ctrl+C to stop the server"
 echo ""
 
-python3 app.py
+npm run dev
 

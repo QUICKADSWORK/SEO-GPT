@@ -1,78 +1,85 @@
-# 🚀 Quick Start - Domain Metrics Web App
+# 🚀 Quick Start – AI Multi-Blog Generator
 
-## Run Locally (30 seconds)
+Launch the Next.js dashboard locally, configure your AI keys, and generate full campaigns in minutes.
+
+---
+
+## 1. Clone & Install
 
 ```bash
-# Start the web app
-./run_webapp.sh
+git clone https://github.com/YOUR_ORG/multi-blog-generator.git
+cd multi-blog-generator
+
+cp .env.local.example .env.local
+# Fill in GEMINI_API_KEY and OPENAI_API_KEY
+
+npm install
 ```
 
-**Open in browser:** http://localhost:5000
-
-That's it! 🎉
+> Need keys? Gemini: https://aistudio.google.com — OpenAI: https://platform.openai.com/account/api-keys
 
 ---
 
-## What You Get
+## 2. Run the App
 
-✅ Beautiful web interface  
-✅ Paste domains, get DR & traffic  
-✅ Export results to CSV  
-✅ Mobile friendly  
-
----
-
-## Deploy to Internet
-
-### Fastest: Render.com (Free!)
-
-1. Push code to GitHub
-2. Connect GitHub to Render.com
-3. Auto-deploys from `render.yaml`
-4. Live in 2 minutes!
-
-**Full guide:** See `WEBAPP_DEPLOYMENT.md`
-
----
-
-## File Structure
-
+```bash
+npm run dev
 ```
-📁 Your Project
-├── app.py                      ← Flask web server
-├── domain_metrics_agent.py     ← Core API logic
-├── templates/index.html        ← Frontend HTML
-├── static/css/style.css        ← Styles
-├── static/js/script.js         ← JavaScript
-└── run_webapp.sh               ← Start script
+
+Visit **http://localhost:3000** to open the dashboard.
+
+---
+
+## 3. Generate Blogs
+
+1. Enter the primary keyword, optional secondary keywords, outline, tone, and backlink URL.
+2. Choose a target word count (1000 / 1500 / 2000 words).
+3. Set the number of blogs (1–10) **or** upload a CSV with per-blog details.
+4. Click **Generate**. Jobs run in parallel; track progress live.
+5. Review the HTML preview, image prompts, and metadata for each blog.
+6. Export everything to a `.docx` file when you’re ready.
+
+CSV headers: `primaryKeyword,secondaryKeywords,blogTitle,outline,wordCount,tone,backlinkUrl`
+
+---
+
+## 4. Essential Commands
+
+```bash
+npm run lint    # ESLint + Next.js config
+npm run build   # Production build with type-checking
+npm run start   # Run production server
 ```
 
 ---
 
-## Features
+## 5. Deploy in Minutes
 
-🎨 **Beautiful UI** - Purple gradient, modern design  
-⚡ **Fast** - Analyze 20 domains in seconds  
-📊 **Results Table** - Color-coded DR badges  
-💾 **CSV Export** - Download results  
-📱 **Responsive** - Works on mobile  
+- **Vercel** – import repo, set environment variables, deploy.
+- **Render / Railway / Fly.io** – build with `npm run build`, start with `npm run start`.
+- Ensure `GEMINI_API_KEY` and `OPENAI_API_KEY` are defined in the hosting platform.
 
----
-
-## Usage
-
-1. **Paste domains** (one per line or comma-separated)
-2. **Click Analyze** 🚀
-3. **View results** in beautiful table
-4. **Export CSV** 💾
+See `WEBAPP_DEPLOYMENT.md` for a detailed walkthrough.
 
 ---
 
-## Support
+## Project Layout
 
-- 📖 **Full README:** `WEBAPP_README.md`
-- 🌐 **Deployment Guide:** `WEBAPP_DEPLOYMENT.md`
-- 🔧 **CLI Version:** `domain_metrics_agent.py`
+```
+📁 multi-blog-generator
+├── app/                     # Next.js app router + pages
+├── components/              # Client components (forms, previews, export)
+├── lib/                     # AI clients, rate limiting, docx helpers
+├── store/                   # Zustand state containers
+├── types/                   # Shared TypeScript types
+├── public/                  # Static assets (if needed)
+├── package.json             # Scripts & dependencies
+└── .env.local.example       # Environment variable template
+```
 
-**Enjoy!** 🎉
+---
+
+Need more detail? Dive into `README.md` for architecture + feature deep dive.
+
+Happy publishing! ✍️🖼️
 
