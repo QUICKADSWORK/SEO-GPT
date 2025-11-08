@@ -101,17 +101,26 @@ function displayResults(results) {
     
     results.forEach((result, index) => {
         const row = document.createElement('tr');
-        
+        const instagramName = result.instagram_display_name || 'N/A';
+        const adCounts = result.ad_counts || {};
+        const totalAds = formatNumber(adCounts.total);
+        const activeAds = formatNumber(adCounts.active);
+        const inactiveAds = formatNumber(adCounts.inactive);
+
         if (result.status === 'success') {
             row.innerHTML = `
                 <td>${index + 1}</td>
                 <td><strong>${result.domain}</strong></td>
                 <td>
                     <span class="dr-badge ${getDRBadgeClass(result.domain_rating)}">
-                        ${result.domain_rating !== null ? result.domain_rating.toFixed(1) : 'N/A'}
+                        ${result.domain_rating !== null && result.domain_rating !== undefined ? result.domain_rating.toFixed(1) : 'N/A'}
                     </span>
                 </td>
                 <td class="traffic-value">${formatNumber(result.us_traffic)}</td>
+                <td>${instagramName}</td>
+                <td>${totalAds}</td>
+                <td>${activeAds}</td>
+                <td>${inactiveAds}</td>
                 <td class="status-success">✓ Success</td>
             `;
         } else {
@@ -120,10 +129,14 @@ function displayResults(results) {
                 <td><strong>${result.domain}</strong></td>
                 <td>-</td>
                 <td>-</td>
+                <td>${instagramName}</td>
+                <td>${totalAds}</td>
+                <td>${activeAds}</td>
+                <td>${inactiveAds}</td>
                 <td class="status-error">✗ Error</td>
             `;
         }
-        
+
         resultsBody.appendChild(row);
     });
     
