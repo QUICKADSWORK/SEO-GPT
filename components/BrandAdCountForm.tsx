@@ -80,7 +80,7 @@ export const BrandAdCountForm = () => {
           <div className="flex gap-3">
             <input
               type="url"
-              placeholder="https://nike.com"
+              placeholder="https://www.amazon.in"
               className={clsx(
                 'flex-1 rounded-xl border px-4 py-3 text-sm focus:outline-none focus:ring-2',
                 errors.websiteUrl
@@ -132,7 +132,7 @@ export const BrandAdCountForm = () => {
             <span className="text-xs text-red-500">{errors.websiteUrl.message}</span>
           )}
           <p className="text-xs text-slate-400">
-            Example: nike.com, adidas.com, apple.com
+            Example: www.amazon.in, nike.com, adidas.com
           </p>
         </div>
 
