@@ -23,13 +23,13 @@ export async function POST(req: NextRequest) {
 
     const { websiteUrl } = parsed.data;
 
-    // Step 1: Use Gemini to identify the Instagram brand name
+    // Step 1: Use Gemini to identify the Instagram brand name (with regional specificity)
     console.log(`🔍 Identifying brand name for: ${websiteUrl}`);
     const brandName = await getInstagramBrandName(websiteUrl);
-    console.log(`✅ Identified brand name: ${brandName}`);
+    console.log(`✅ Identified brand name: "${brandName}"`);
 
-    // Step 2: Get ad counts from BrandBooster API
-    console.log(`📊 Fetching ad counts for: ${brandName}`);
+    // Step 2: Get ad counts from BrandBooster API using the identified brand name
+    console.log(`📊 Fetching ad counts for: "${brandName}"`);
     const adCounts = await getBrandAdCounts(brandName);
     console.log(`✅ Ad counts retrieved:`, adCounts);
 

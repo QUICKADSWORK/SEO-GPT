@@ -132,7 +132,7 @@ export const BrandAdCountForm = () => {
             <span className="text-xs text-red-500">{errors.websiteUrl.message}</span>
           )}
           <p className="text-xs text-slate-400">
-            Example: www.amazon.in, nike.com, adidas.com
+            Example: www.amazon.in → Amazon India, nike.com → Nike
           </p>
         </div>
 
