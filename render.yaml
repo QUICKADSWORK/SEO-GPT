@@ -1,10 +1,10 @@
 services:
-  - type: web
-    name: ai-multi-blog-generator
-    env: node
-    plan: free
-    buildCommand: "npm install && npm run build"
-    startCommand: "npm run start"
+    - type: web
+      name: ai-multi-blog-generator
+      env: node
+      plan: free
+      buildCommand: "npm install && npm run build"
+      startCommand: "npm run start"
     envVars:
       - key: GEMINI_API_KEY
         sync: false
