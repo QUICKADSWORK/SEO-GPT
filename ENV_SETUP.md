@@ -6,14 +6,14 @@ Set the API keys before running:
 
 ```bash
 export SEMRUSH_API_KEY="56b6f4dce1mshc3398ebe2b7bdf7p1a8c18jsn91e4f7fa09ae"
-export GEMINI_API_KEY="your-gemini-api-key"
+export GEMINI_API_KEY="AIzaSyAHY8-W3rmJzvARGUgTaZvFOFcLBCdNhU4"
 ```
 
 Or add to your `~/.zshrc` or `~/.bashrc`:
 
 ```bash
 echo 'export SEMRUSH_API_KEY="56b6f4dce1mshc3398ebe2b7bdf7p1a8c18jsn91e4f7fa09ae"' >> ~/.zshrc
-echo 'export GEMINI_API_KEY="your-gemini-api-key"' >> ~/.zshrc
+echo 'export GEMINI_API_KEY="AIzaSyAHY8-W3rmJzvARGUgTaZvFOFcLBCdNhU4"' >> ~/.zshrc
 source ~/.zshrc
 ```
 
@@ -25,5 +25,5 @@ Add environment variable in the dashboard:
 **Value:** `56b6f4dce1mshc3398ebe2b7bdf7p1a8c18jsn91e4f7fa09ae`
 
 **Key:** `GEMINI_API_KEY`  
-**Value:** *your Gemini API key*
+**Value:** `AIzaSyAHY8-W3rmJzvARGUgTaZvFOFcLBCdNhU4`
 

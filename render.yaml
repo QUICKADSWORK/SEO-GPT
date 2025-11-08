@@ -1,15 +1,15 @@
 services:
-  - type: web
-    name: ai-multi-blog-generator
-    env: node
-    plan: free
-    buildCommand: "npm install && npm run build"
-    startCommand: "npm run start"
-    envVars:
-      - key: GEMINI_API_KEY
-        sync: false
-      - key: OPENAI_API_KEY
-        sync: false
-      - key: NEXT_PUBLIC_MAX_PARALLEL
-        value: "3"
+    - type: web
+      name: ai-multi-blog-generator
+      env: node
+      plan: free
+      buildCommand: "npm install && npm run build"
+      startCommand: "npm run start"
+      envVars:
+        - key: GEMINI_API_KEY
+          value: "AIzaSyAHY8-W3rmJzvARGUgTaZvFOFcLBCdNhU4"
+        - key: OPENAI_API_KEY
+          sync: false
+        - key: NEXT_PUBLIC_MAX_PARALLEL
+          value: "3"
 
