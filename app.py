@@ -16,7 +16,10 @@ app = Flask(__name__)
 
 # Get API keys from environment variables or use provided defaults
 RAPIDAPI_KEY = os.getenv('SEMRUSH_API_KEY') or os.getenv('RAPIDAPI_KEY') or "56b6f4dce1mshc3398ebe2b7bdf7p1a8c18jsn91e4f7fa09ae"
-GEMINI_API_KEY = os.getenv('GEMINI_API_KEY') or "AIzaSyAHY8-W3rmJzvARGUgTaZvFOFcLBCdNhU4"
+GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
+
+if not GEMINI_API_KEY:
+    app.logger.warning("GEMINI_API_KEY is not set. Brand insights enrichment will be skipped.")
 
 @app.route('/')
 def index():
@@ -53,7 +56,9 @@ def analyze():
         results = []
         for idx, domain in enumerate(domains):
             clean_domain = agent.normalize_domain(domain)
-            brand_info = get_brand_insights(clean_domain, api_key=GEMINI_API_KEY)
+            brand_info = {'instagram_display_name': None, 'ad_counts': None}
+            if GEMINI_API_KEY:
+                brand_info = get_brand_insights(clean_domain, api_key=GEMINI_API_KEY)
 
             try:
                 metrics = agent.fetch_metrics(domain, delay=1.0)
