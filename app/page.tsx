@@ -5,6 +5,7 @@ import { GeneratorForm } from '@/components/GeneratorForm';
 import { ProgressPanel } from '@/components/ProgressPanel';
 import { BlogPreviewList } from '@/components/BlogPreviewList';
 import { ExportButton } from '@/components/ExportButton';
+import { BrandAdCountForm } from '@/components/BrandAdCountForm';
 import { useBlogStore } from '@/store/blogStore';
 import { BlogGenerationRequest, GeneratedBlog } from '@/types/blog';
 
@@ -119,6 +120,11 @@ export default function DashboardPage() {
             <ExportButton />
           </div>
         </header>
+
+        {/* Brand Ad Intelligence Section */}
+        <section className="mt-12">
+          <BrandAdCountForm />
+        </section>
 
         <div className="mt-12 grid gap-8 lg:grid-cols-[1.1fr,0.9fr]">
           <GeneratorForm onGenerate={handleGenerate} isGenerating={isGenerating} />
